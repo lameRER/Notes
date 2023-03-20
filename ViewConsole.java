@@ -1,3 +1,4 @@
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class ViewConsole {
@@ -49,14 +50,24 @@ public class ViewConsole {
     }
 
     private void deleteNote(Scanner scanner) {
-        String delId = prompt(scanner, "Введите id: ");
-        controller.delete(delId);
+        try{
+            String deleteId = prompt(scanner, "Введите id: ");
+            controller.delete(deleteId);
+        }
+        catch (NoSuchElementException ex) {
+            printError();
+        }
     }
 
     private void editNote(Scanner scanner) {
-        String editId = prompt(scanner, "Введите id: ");
-        String editText = prompt(scanner, "Введите текст: ");
-        controller.edit(editId, editText);
+        try{
+            String editId = prompt(scanner, "Введите id: ");
+            String editText = prompt(scanner, "Введите текст: ");
+            controller.edit(editId, editText);
+        }
+        catch (NoSuchElementException ex){
+            printError();
+        }
     }
 
     private void readAll() {
@@ -69,9 +80,13 @@ public class ViewConsole {
             INote note = controller.read(readId);
             System.out.println(note.toString());
         }
-        catch (Exception ex){
-            System.out.println("Заметки с таким id не существует!");
+        catch (NoSuchElementException ex){
+            printError();
         }
+    }
+
+    private void printError(){
+        System.out.println("Заметки с таким id не существует!");
     }
 
     private void addNote(Scanner scanner) {
